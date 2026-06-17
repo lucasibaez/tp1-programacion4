@@ -1,0 +1,26 @@
+body {
+    font-family: Arial;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+.bloqueado {
+    background-color: #fd9f8b;
+}
+
+.activo {
+    background-color: #cef8c6;
+}
+
+button {
+    font-size: 18px;
+    cursor: pointer;
+}

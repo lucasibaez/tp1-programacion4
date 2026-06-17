@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Login</h1>
+<hr>
+<p> estoy probando esto de las etiquetas p
+<p> probando
+
+<form id="loginForm">
+    <input type="text" id="usuario" placeholder="Usuario" required><br><br>
+    <input type="password" id="clave" placeholder="Clave" required><br><br>
+    <button type="submit">Ingresar</button>
+</form>
+
+<p id="mensaje" style="color:red;"></p>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const user = document.getElementById("usuario").value;
+    const pass = document.getElementById("clave").value;
+
+    fetch(`http://127.0.0.1:5000/login?user=${user}&pass=${pass}`)
+    .then(r => r.json())
+    .then(data => {
+        if(data.respuesta === "OK"){
+            window.location.href = "lista.html";
+        } else {
+            document.getElementById("mensaje").innerText = data.mje;
+        }
+    })
+    .catch(() => {
+        document.getElementById("mensaje").innerText = "Error de conexión";
+    });
+});
+</script>
+
+</body>
+</html>

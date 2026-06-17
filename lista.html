@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Usuarios</h2>
+
+<input type="text" id="buscarUsuario" placeholder="Buscar usuario">
+<button onclick="cargarUsuarios()">Buscar</button>
+
+<table id="tablaUsuarios">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Usuario</th>
+            <th>Bloqueado</th>
+            <th>Apellido</th>
+            <th>Nombre</th>
+            <th>Bloquear</th>
+            <th>Desbloquear</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<p id="mensaje"></p>
+
+<script>
+function cargarUsuarios() {
+    let filtro = document.getElementById("buscarUsuario").value;
+    let url = "http://127.0.0.1:5000/lista?action=BUSCAR";
+
+    if(filtro) url += "&usuario=" + filtro;
+
+    fetch(url)
+    .then(r => r.json())
+    .then(data => {
+        let tbody = document.querySelector("#tablaUsuarios tbody");
+        tbody.innerHTML = "";
+
+        if(data.length === 0){
+            document.getElementById("mensaje").innerText = "No se encontraron resultados.";
+            return;
+        } else {
+            document.getElementById("mensaje").innerText = "";
+        }
+
+        data.forEach(u => {
+            let tr = document.createElement("tr");
+
+            tr.className = (u.bloqueado === "Y") ? "bloqueado" : "activo";
+
+            tr.innerHTML = `
+                <td>${u.id}</td>
+                <td>${u.usuario}</td>
+                <td>${u.bloqueado}</td>
+                <td>${u.apellido}</td>
+                <td>${u.nombre}</td>
+                <td><button onclick="bloquear(${u.id})">👍</button></td>
+                <td><button onclick="desbloquear(${u.id})">👎</button></td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+    });
+}
+
+function bloquear(id){
+    fetch(`http://127.0.0.1:5000/lista?action=BLOQUEAR&idUser=${id}&estado=Y`)
+    .then(r => r.json())
+    .then(d => {
+        alert(d.mje);
+        cargarUsuarios();
+    });
+}
+
+function desbloquear(id){
+    fetch(`http://127.0.0.1:5000/lista?action=BLOQUEAR&idUser=${id}&estado=N`)
+    .then(r => r.json())
+    .then(d => {
+        alert(d.mje);
+        cargarUsuarios();
+    });
+}
+
+cargarUsuarios();
+</script>
+
+</body>
+</html>
